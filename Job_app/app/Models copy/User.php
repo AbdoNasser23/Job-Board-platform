@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+#[Fillable(['name', 'email', 'password','role'])]
+#[Hidden(['password', 'remember_token'])]
+class User extends Authenticatable
+{
+    use HasFactory, Notifiable , HasUuids ,SoftDeletes;
+
+    protected $table = "users";
+    protected $keyType = 'string';
+    public $incrementing = false;
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'deleted_at' => 'datetime',
+        ];
+    }
+
+    # soft delete
+    protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+    ];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'user_id', 'id');
+    }
+    public function jobApplication()
+    {
+        return $this->hasMany(JobApplication::class, 'user_id', 'id');
+    }
+
+    public function resume()
+    {
+        return $this->hasMany(Resume::class, 'user_id', 'id');
+    }
+}
