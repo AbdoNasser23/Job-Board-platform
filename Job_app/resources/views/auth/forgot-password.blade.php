@@ -1,25 +1,27 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
+<x-guest-layout heading="Forgot your password?" subheading="No worries — we'll send a reset link straight to your inbox.">
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <h2 class="font-display text-2xl font-semibold mb-1">Reset your password</h2>
+    <p class="text-sm text-[#8E8EA0] mb-8">
+        Enter the email linked to your account and we'll send you a link to set a new one.
+    </p>
 
-    <form method="POST" action="{{ route('password.email') }}">
+    <x-auth-session-status :status="session('status')" />
+
+    <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
         @csrf
 
-        <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-input-label for="email" value="Email address" />
+            <x-text-input id="email" type="email" name="email" :value="old('email')" required autofocus
+                placeholder="you@example.com" />
+            <x-input-error :messages="$errors->get('email')" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
+        <x-primary-button>Email password reset link</x-primary-button>
+
+        <p class="text-sm text-[#8E8EA0] text-center">
+            Remembered it after all?
+            <a href="{{ route('login') }}" class="text-[#5B8DEF] hover:text-[#7BA3F2]">Back to sign in</a>
+        </p>
     </form>
 </x-guest-layout>
