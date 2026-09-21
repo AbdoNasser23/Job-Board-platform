@@ -6,11 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>@yield('title', 'Job Board Backoffice')</title>
-
+    <link rel="icon" type="image/jpg" href="{{ asset('images/logo.jpg') }}">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-slate-50 text-slate-800 antialiased">
+
+    @php
+        $click = 'bg-blue-50 px-3 py-2.5 text-sm font-medium text-blue-700';
+        $notClick = 'px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900';
+    @endphp
 
     <div class="min-h-screen">
 
@@ -30,28 +35,28 @@
 
                 <nav class="space-y-1">
 
-                    <a href="{{ route('dashboard') }}"
-                        class="flex items-center gap-3 rounded-lg bg-blue-50 px-3 py-2.5 text-sm font-medium text-blue-700">
+                    <a href="{{ route('dashboard.index') }}"
+                        class="flex items-center gap-3 rounded-lg {{ request()->routeIs('dashboard.index') ? $click : $notClick }}">
                         Dashboard
                     </a>
 
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
+                    <a href="{{ route('companies.index') }}"
+                        class="flex items-center gap-3 rounded-lg {{ request()->routeIs('companies.index') ? $click : $notClick }}">
                         Companies
                     </a>
 
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
+                    <a href="{{ route('vacancies.index') }}"
+                        class="flex items-center gap-3 rounded-lg {{ request()->routeIs('vacancies.index') ? $click : $notClick }}">
                         Job Vacancies
                     </a>
 
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
-                        Applications
+                    <a href="{{ route('applications.index') }}"
+                        class="flex items-center gap-3 rounded-lg {{ request()->routeIs('applications.index') ? $click : $notClick }}">
+                        Job Applications
                     </a>
 
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
+                    <a href="{{ route('users.index') }}"
+                        class="flex items-center gap-3 rounded-lg {{ request()->routeIs('users.index') ? $click : $notClick }}">
                         Users
                     </a>
 
@@ -63,15 +68,15 @@
 
                 <nav class="space-y-1">
 
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
-                        Categories
+                    <a href="{{ route('categories.index') }}"
+                        class="flex items-center gap-3 rounded-lg {{ request()->routeIs('categories.index') ? $click : $notClick }}">
+                        Job Categories
                     </a>
 
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
+                    {{-- <a href="#"
+                        class="flex items-center gap-3 rounded-lg {{request()->routeIs('#.index') ? $click : $notClick}}">
                         Analytics
-                    </a>
+                    </a> --}}
 
                 </nav>
 
@@ -129,9 +134,20 @@
             <main class="p-4 sm:p-6 lg:p-8">
 
                 @if (session('success'))
-                    <div class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                    <div id="success-message"
+                        class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
                         {{ session('success') }}
                     </div>
+
+                    <script>
+                        setTimeout(() => {
+                            const message = document.getElementById('success-message');
+
+                            if (message) {
+                                message.remove();
+                            }
+                        }, 2000);
+                    </script>
                 @endif
 
                 @if (session('error'))
