@@ -1,34 +1,94 @@
-<x-guest-layout heading="Set a new password." subheading="Choose something secure that you don't use anywhere else.">
+@extends('layouts.app')
 
-    <h2 class="font-display text-2xl font-semibold mb-1">Create new password</h2>
-    <p class="text-sm text-[#8E8EA0] mb-8">Your new password must be different from previous ones.</p>
+@section('title', 'Reset Password - JobBoard')
 
-    <form method="POST" action="{{ route('password.store') }}" class="space-y-5">
-        @csrf
+@section('content')
 
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+    <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-6 py-12">
 
-        <div>
-            <x-input-label for="email" value="Email address" />
-            <x-text-input id="email" type="email" name="email" :value="old('email', $request->email)" required
-                autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" />
+        <div class="w-full max-w-md">
+
+            <div class="text-center mb-8">
+
+                <h1 class="text-3xl font-bold text-white">
+                    Reset password
+                </h1>
+
+                <p class="mt-2 text-gray-400">
+                    Choose a new password for your account.
+                </p>
+
+            </div>
+
+            <div class="bg-dark-800 border border-white/10 rounded-2xl
+                    p-8 shadow-xl">
+
+                @if ($errors->any())
+                    <div
+                        class="mb-6 rounded-lg border border-red-500/20
+                            bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ url('/reset-password') }}" class="space-y-5">
+
+                    @csrf
+
+                    <input type="hidden" name="token" value="{{ $token ?? request('token') }}">
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
+                            Email
+                        </label>
+
+                        <input id="email" type="email" name="email" value="{{ old('email', request('email')) }}"
+                            required autofocus
+                            class="w-full rounded-lg bg-dark-700 border border-white/10
+                               px-4 py-3 text-white
+                               outline-none transition
+                               focus:border-indigo-500 focus:ring-2
+                               focus:ring-indigo-500/20">
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
+                            New password
+                        </label>
+
+                        <input id="password" type="password" name="password" required
+                            class="w-full rounded-lg bg-dark-700 border border-white/10
+                               px-4 py-3 text-white
+                               outline-none transition
+                               focus:border-indigo-500 focus:ring-2
+                               focus:ring-indigo-500/20">
+                    </div>
+
+                    <div>
+                        <label for="password_confirmation" class="block text-sm font-medium text-gray-300 mb-2">
+                            Confirm new password
+                        </label>
+
+                        <input id="password_confirmation" type="password" name="password_confirmation" required
+                            class="w-full rounded-lg bg-dark-700 border border-white/10
+                               px-4 py-3 text-white
+                               outline-none transition
+                               focus:border-indigo-500 focus:ring-2
+                               focus:ring-indigo-500/20">
+                    </div>
+
+                    <button type="submit"
+                        class="w-full rounded-lg bg-indigo-600 hover:bg-indigo-500
+                           px-4 py-3 font-medium text-white transition">
+                        Reset password
+                    </button>
+
+                </form>
+
+            </div>
+
         </div>
 
-        <div>
-            <x-input-label for="password" value="New password" />
-            <x-text-input id="password" type="password" name="password" required autocomplete="new-password"
-                placeholder="••••••••" />
-            <x-input-error :messages="$errors->get('password')" />
-        </div>
+    </div>
 
-        <div>
-            <x-input-label for="password_confirmation" value="Confirm new password" />
-            <x-text-input id="password_confirmation" type="password" name="password_confirmation" required
-                autocomplete="new-password" placeholder="••••••••" />
-            <x-input-error :messages="$errors->get('password_confirmation')" />
-        </div>
-
-        <x-primary-button>Reset password</x-primary-button>
-    </form>
-</x-guest-layout>
+@endsection
