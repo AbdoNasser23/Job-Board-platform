@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoryCreateRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\JobCategory;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -13,10 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $quiry = JobCategory::latest();
+        Gate::authorize("viewAny", JobCategory::class);
 
-        $categories = $quiry->paginate(10);
-
+        $categories = JobCategory::latest()->paginate(10);
         return view("category.index", compact("categories"));
     }
 
@@ -25,6 +25,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        Gate::authorize("create", JobCategory::class);
         return view("category.create");
     }
 
@@ -33,11 +34,12 @@ class CategoryController extends Controller
      */
     public function store(CategoryCreateRequest $request)
     {
+        Gate::authorize("create", JobCategory::class);
         $category = new JobCategory();
         $category->name = $request->input('name');
         $category->save();
 
-        return to_route('categories.index')->with('success','Category created successfully!');
+        return to_route('categories.index')->with('success', 'Category created successfully!');
     }
 
     /**
@@ -53,6 +55,7 @@ class CategoryController extends Controller
      */
     public function edit(JobCategory $category)
     {
+        Gate::authorize('update', $category);
         return view("category.edit", compact("category"));
     }
 
@@ -61,9 +64,10 @@ class CategoryController extends Controller
      */
     public function update(CategoryUpdateRequest $request,  JobCategory $category)
     {
+        Gate::authorize("update", $category);
         $category->name = $request->input("name");
         $category->save();
-        return to_route("categories.index")->with("success","Category updated successfully!");
+        return to_route("categories.index")->with("success", "Category updated successfully!");
     }
 
     /**
@@ -71,21 +75,32 @@ class CategoryController extends Controller
      */
     public function destroy(JobCategory $category)
     {
+        Gate::authorize("delete", $category);
         $category->delete();
-        return to_route("categories.index")->with("success","Category archived successfully!");
+
+        return to_route('categories.archived')
+            ->with('success', 'Category archived successfully!');
     }
 
 
-    public function archived(JobCategory $category)
+    public function forceDelete(JobCategory $category)
     {
-        $categories = $category->onlyTrashed()->paginate(10);
+        Gate::authorize('forceDelete', $category);
+        $category->forceDelete();
+        return to_route("categories.index")->with("success", "Category delete permanently!");
+    }
+
+    public function archived()
+    {
+        Gate::authorize("archived", JobCategory::class);
+        $categories = JobCategory::onlyTrashed()->orderByDesc('deleted_at')->paginate(10);
         return view("category.archived", compact("categories"));
     }
 
     public function restore(JobCategory $category)
     {
+        Gate::authorize("restore", $category);
         $category->restore();
-        return to_route("categories.index")->with("success","Category restored successfully.");
+        return to_route("categories.index")->with("success", "Category restored successfully.");
     }
-
 }

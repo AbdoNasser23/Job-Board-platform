@@ -1,11 +1,10 @@
 @extends('layouts.backoffice')
 
-@section('title', 'Archived Categories - Job Board')
+@section('title', 'Archived Companies - Job Board')
 
-@section('page-title', 'Archived Categories')
+@section('page-title', 'Archived Companies')
 
 @section('content')
-
 
 
 <div class="rounded-xl bg-white p-6 shadow-sm">
@@ -13,17 +12,17 @@
     <div class="mb-6 flex items-center justify-between">
         <div>
             <h2 class="text-lg font-semibold text-slate-800">
-                Archived Categories
+                Archived Companies
             </h2>
 
             <p class="mt-1 text-sm text-slate-500">
-                Manage your archived categories.
+                Manage your archived companies.
             </p>
         </div>
 
-        <a href="{{ route('categories.index') }}"
+        <a href="{{ route('companies.index') }}"
             class="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200">
-            Back to Categories
+            Back to Companies
         </a>
     </div>
 
@@ -33,7 +32,11 @@
             <thead class="border-b border-slate-200 text-slate-500">
                 <tr>
                     <th class="px-4 py-3 font-medium">
-                        Category
+                        Company
+                    </th>
+
+                    <th class="px-4 py-3 font-medium">
+                        Industry
                     </th>
 
                     <th class="px-4 py-3 text-right font-medium">
@@ -44,19 +47,23 @@
 
             <tbody class="divide-y divide-slate-100">
 
-                @forelse ($categories as $category)
+                @forelse ($companies as $company)
 
                     <tr class="transition hover:bg-slate-50">
 
                         <td class="px-4 py-4 font-medium text-slate-800">
-                            {{ $category->name }}
+                            {{ $company->name }}
+                        </td>
+
+                        <td class="px-4 py-4 text-slate-600">
+                            {{ $company->industry }}
                         </td>
 
                         <td class="px-4 py-4">
                             <div class="flex justify-end gap-4">
 
                                 {{-- Restore --}}
-                                <form action="{{ route('categories.restore', $category) }}" method="POST">
+                                <form action="{{ route('companies.restore', $company) }}" method="POST">
 
                                     @csrf
                                     @method('PATCH')
@@ -84,10 +91,9 @@
                                 </form>
 
                                 {{-- Delete --}}
-
-                                <form action="{{ route('categories.forceDelete', $category) }}"
+                                <form action="{{ route('companies.forceDelete', $company) }}"
                                     method="POST"
-                                    onsubmit="return confirm('Are you sure you want to permanently delete this category? This action cannot be undone.');">
+                                    onsubmit="return confirm('Are you sure you want to permanently delete this company? This action cannot be undone.');">
 
                                     @csrf
                                     @method('DELETE')
@@ -104,7 +110,7 @@
 
                                             <path stroke-linecap="round"
                                                 stroke-linejoin="round"
-                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673A2.25 2.25 0 0 1 15.916 21.75H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12.142.397a48.108 48.108 0 0 1 3.478-.397m7.144 0V4.5A2.25 2.25 0 0 0 13 2.25h-2A2.25 2.25 0 0 0 8.75 4.5v.528" />
+                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673A2.25 2.25 0 0 1 15.916 21.75H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 1 3.478-.397m-12.142 0a48.108 48.108 0 0 1 3.478-.397m7.144 0V4.5A2.25 2.25 0 0 0 13 2.25h-2A2.25 2.25 0 0 0 8.75 4.5v.528" />
 
                                         </svg>
 
@@ -122,9 +128,9 @@
                 @empty
 
                     <tr>
-                        <td colspan="2"
+                        <td colspan="3"
                             class="px-4 py-10 text-center text-sm text-slate-500">
-                            No archived categories found.
+                            No archived companies found.
                         </td>
                     </tr>
 
@@ -135,9 +141,9 @@
         </table>
     </div>
 
-    @if ($categories->hasPages())
+    @if ($companies->hasPages())
         <div class="mt-6">
-            {{ $categories->links('pagination.custom') }}
+            {{ $companies->links('pagination.custom') }}
         </div>
     @endif
 

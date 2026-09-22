@@ -9,6 +9,7 @@
     <div class="space-y-6">
 
         {{-- Create  and Archive --}}
+        @if(Auth::user()->role === 'admin')
         <div class="flex justify-end gap-3">
 
             <a href="{{ route('categories.archived') }}"
@@ -30,6 +31,7 @@
             </a>
 
         </div>
+        @endif
 
         {{-- Categories Table --}}
         <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -39,10 +41,11 @@
                         <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">
                             Category
                         </th>
-
+                        @if(Auth::user()->role === 'admin')
                         <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">
                             Actions
                         </th>
+                        @endif
                     </tr>
                 </thead>
 
@@ -54,7 +57,7 @@
                             <td class="px-6 py-4 text-sm text-slate-700">
                                 {{ $category->name }}
                             </td>
-
+                            @if(Auth::user()->role === 'admin')
                             <td class="px-6 py-4">
 
                                 <div class="flex items-center gap-5">
@@ -96,6 +99,7 @@
                                 </div>
 
                             </td>
+                            @endif
 
                         </tr>
                     @endforeach
