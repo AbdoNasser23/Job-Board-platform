@@ -67,7 +67,7 @@
                             </td>
 
                             <td class="px-6 py-4 text-sm text-slate-700">
-                                {{ $company->industry }}
+                                {{ $company->industry->name }}
                             </td>
 
                             <td class="px-6 py-4">
@@ -90,7 +90,7 @@
                                     </a>
 
                                     {{-- Edit --}}
-                                    <a href="{{ route('companies.edit', $company) }}"
+                                    <a href="{{ route('companies.edit',  [$company, 'redirectToList' => true]) }}"
                                         class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition hover:text-blue-800">
 
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

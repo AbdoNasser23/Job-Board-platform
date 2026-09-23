@@ -15,10 +15,11 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name')->unique();
             $table->string('address');
-            $table->string('industry');
             $table->string('website')->nullable();
             $table->uuid('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
+            $table->uuid('industry_id');
+            $table->foreign('industry_id')->references('id')->on('industries')->onDelete('restrict');
             $table->softDeletes();
             $table->timestamps();
         });

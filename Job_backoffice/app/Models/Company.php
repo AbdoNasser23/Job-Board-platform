@@ -20,8 +20,8 @@ class Company extends Model
     protected $fillable = [
         'name',
         'address',
-        'industry',
         'website',
+        'industry_id',
         'user_id',
     ];
     protected function casts(): array
@@ -35,9 +35,20 @@ class Company extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function industry()
+    {
+        return $this->belongsTo(Industry::class, 'industry_id', 'id');
+    }
+
     public function jobVacancy()
     {
         return $this->hasMany(JobVacancy::class, 'company_id', 'id');
+    }
+
+    public function jobApplication()
+    {
+        return $this->hasManyThrough(JobApplication::class , JobVacancy::class,'company_id','job_vacancy_id','id','id');
     }
 
 }

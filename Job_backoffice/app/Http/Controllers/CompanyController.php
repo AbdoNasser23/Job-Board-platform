@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CompanyCreateRequest;
 use App\Http\Requests\CompanyUpdateRequest;
 use App\Models\Company;
+use App\Models\Industry;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 
 class CompanyController extends Controller
 {
@@ -16,9 +19,9 @@ class CompanyController extends Controller
     {
         Gate::authorize("viewAny", Company::class);
 
-        if(Auth::user()->role === "admin") {
+        if (Auth::user()->role === "admin") {
             $companies = Company::latest()->paginate(10);
-        }else{
+        } else {
             $companies = Company::where("user_id", Auth::user()->id)->latest()->paginate(10);
         }
 
@@ -29,23 +32,43 @@ class CompanyController extends Controller
     public function create()
     {
         Gate::authorize('create', Company::class);
-        $users = User::where('role','company_owner')->get();
-        return view("company.create", compact("users"));
+        $industries = Industry::get();
+        $users = User::where('role', 'company_owner')->get();
+        return view("company.create", compact("users", 'industries'));
     }
 
 
     public function store(CompanyCreateRequest $request)
     {
         Gate::authorize('create', Company::class);
-        $company = new Company();
+        $validated = $request->validated();
 
-        $company->name = $request->input('name');
-        $company->address = $request->input('address');
-        $company->industry = $request->input('industry');
-        $company->website = $request->input('website');
-        $company->user_id = $request->input('user_id');
 
-        $company->save();
+        DB::transaction(function () use ($validated) {
+
+            if ($validated['owner_type'] === 'new') {
+
+                $owner = User::create([
+                    'name' => $validated['owner_name'],
+                    'email' => $validated['owner_email'],
+                    'password' => Hash::make($validated['owner_password']),
+                    'role' => 'company_owner',
+                ]);
+                $ownerId = $owner->id;
+            } else {
+                $ownerId = $validated['user_id'];
+            }
+
+            Company::create([
+                'name' => $validated['name'],
+                'address' => $validated['address'],
+                'website' => $validated['website'],
+                'user_id' => $ownerId,
+                'industry_id' => $validated['industry_id'],
+            ]);
+        });
+
+
 
         return to_route('companies.index')->with('success', 'Company created successfully!');
     }
@@ -54,6 +77,8 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         Gate::authorize('view', $company);
+
+
         return view('company.show', compact('company'));
     }
 
@@ -61,21 +86,53 @@ class CompanyController extends Controller
     public function edit(Company $company)
     {
         Gate::authorize('update', $company);
-        return view('company.edit', compact('company'));
+        $industries = Industry::get();
+
+        $backUrl = url()->previous();
+        return view('company.edit', compact('company', 'backUrl', 'industries'));
     }
 
 
-    public function update(CompanyUpdateRequest $request,  Company $company)
+    public function update(CompanyUpdateRequest $request, Company $company)
     {
         Gate::authorize('update', $company);
-        $company->name = $request->input('name');
-        $company->address = $request->input('address');
-        $company->industry = $request->input('industry');
-        $company->website = $request->input('website');
+
+        $validated = $request->validated();
+
+        // Update company data
+        $company->name = $validated['name'];
+        $company->address = $validated['address'];
+        $company->industry_id = $validated['industry_id'];
+        $company->website = $validated['website'];
 
         $company->save();
 
-        return to_route('companies.index')->with('success', 'Company updated successfully!');
+
+        // Update owner only if checkbox is enabled
+        if ($request->boolean('update_owner')) {
+
+            $owner = $company->user;
+
+            $owner->name = $validated['owner_name'];
+
+            // Update password only if a new password was entered
+            if (!empty($validated['owner_password'])) {
+                $owner->password = Hash::make($validated['owner_password']);
+            }
+
+            $owner->save();
+        }
+
+
+        // Redirect based on redirectToList
+        if ($request->boolean('redirectToList') === false) {
+
+            return to_route('companies.show', $company)
+                ->with('success', 'Company updated successfully!');
+        }
+
+        return to_route('companies.index')
+            ->with('success', 'Company updated successfully!');
     }
 
 
@@ -97,11 +154,12 @@ class CompanyController extends Controller
     public function archived()
     {
         Gate::authorize('archived', Company::class);
-        if(Auth::user()->role === 'admin'){
+        if (Auth::user()->role === 'admin') {
             $companies = Company::onlyTrashed()->orderByDesc('deleted_at')->paginate(10);
-        }else{
+        } else {
             $companies = Company::onlyTrashed()->where('user_id', Auth::user()->id)->orderByDesc('deleted_at')->paginate(10);
         }
+
 
         return view('company.archived', compact('companies'));
     }

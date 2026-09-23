@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Company;
+use App\Models\Industry;
 use App\Models\JobApplication;
 use App\Models\JobCategory;
 use App\Models\JobVacancy;
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
         // include the job data from the JSON file
         $jobData             = json_decode(file_get_contents(database_path('data/job_data.json')), true);
         $jobApplicationsData = json_decode(file_get_contents(database_path('data/job_applications.json')), true);
+        $industries = json_decode(file_get_contents(database_path('data/industries.json')), true);
 
         // Create the admin user
         User::firstOrCreate([
@@ -42,6 +44,13 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        //Create Industries
+        foreach($industries as $industry){
+            Industry::firstOrCreate([
+                'name' => $industry['name'],
+            ]);
+        }
+
         // Create the companies and associate them with the company-owner user
         foreach ($jobData['companies'] as $company) {
             $companyOwner = User::firstOrCreate([
@@ -52,13 +61,16 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('123456789'),
 
             ]);
+
+            $industry = Industry::inRandomOrder()->first();
+
             Company::firstOrCreate([
                 'name' => $company['name'],
             ], [
                 'address'  => $company['address'],
-                'industry' => $company['industry'],
                 'website'  => $company['website'],
                 'user_id'  => $companyOwner->id,
+                'industry_id' => $industry->id,
             ]);
         }
 

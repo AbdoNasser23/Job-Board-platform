@@ -56,7 +56,7 @@
                         </td>
 
                         <td class="px-4 py-4 text-slate-600">
-                            {{ $company->industry }}
+                            {{ $company->industry->name }}
                         </td>
 
                         <td class="px-4 py-4">
