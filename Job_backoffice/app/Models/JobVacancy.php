@@ -48,4 +48,6 @@ class JobVacancy extends Model
         return $this->hasMany(JobApplication::class, 'job_vacancy_id', 'id');
     }
 
+    
+
 }

@@ -216,7 +216,7 @@
 
                                         <td class="px-4 py-3">
 
-                                            <a href="#"
+                                            <a href="{{route('vacancies.show',[$job, "from" => "company" , "company" => $company->id])}}"
                                                 class="text-sm font-medium text-blue-600 transition hover:text-blue-800">
                                                 View
                                             </a>

@@ -31,7 +31,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('companies', CompanyController::class);
 
     //vacancy and archive
+    Route::get('/vacancies/archived',[VacancyController::class,'archived'])->name('vacancies.archived');
+    Route::patch('/vacancies/{vacancy}/restore',[VacancyController::class,'restore'])->withTrashed()->name('vacancies.restore');
+    Route::delete('/vacancies/{vacancy}/archived',[VacancyController::class,'forceDelete'])->name('vacancies.forceDelete')->withTrashed();
     Route::resource('vacancies', VacancyController::class);
+
 
     //user and archive
     Route::resource('users',UserController::class);
