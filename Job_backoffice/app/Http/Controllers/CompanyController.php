@@ -139,6 +139,16 @@ class CompanyController extends Controller
     public function destroy(Company $company)
     {
         Gate::authorize('delete', $company);
+
+        $vacancies = $company->jobVacancy()->whereNull('deleted_at');
+        $vacancies->update(
+            [
+                'archived_with_company' => true,
+            ]
+        );
+
+        $vacancies->delete();
+
         $company->delete();
         return to_route('companies.archived')->with('success', 'Company archived successfully!');
     }
@@ -146,6 +156,9 @@ class CompanyController extends Controller
     public function forceDelete(Company $company)
     {
         Gate::authorize('forceDelete', $company);
+
+        $company->jobVacancy()->withTrashed()->forceDelete();
+
         $company->forceDelete();
 
         return to_route('companies.index')->with('success', 'Company delete permanently!');
@@ -167,7 +180,18 @@ class CompanyController extends Controller
     public function restore(Company $company)
     {
         Gate::authorize('restore', $company);
+
+
         $company->restore();
+        $company->jobVacancy()->onlyTrashed()->where('archived_with_company',true)->restore();
+
+        $company->jobVacancy()->where('archived_with_company',true)->update([
+            'archived_with_company' => false,
+        ]);
+
+
+
+
         return to_route('companies.index')->with('success', 'Company Restored successfully!');
     }
 }

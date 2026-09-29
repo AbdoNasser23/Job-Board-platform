@@ -17,7 +17,7 @@ return new class extends Migration
             $table->float('ai_generated_score', 2)->default(0);
             $table->text('ai_generated_feedback')->nullable();
             $table->uuid('job_vacancy_id');
-            $table->foreign('job_vacancy_id')->references('id')->on('job_vacancies')->onDelete('restrict');
+            $table->foreign('job_vacancy_id')->references('id')->on('job_vacancies')->onDelete('cascade');
             $table->uuid('resume_id');
             $table->foreign('resume_id')->references('id')->on('resumes')->onDelete('restrict');
             $table->uuid('user_id');

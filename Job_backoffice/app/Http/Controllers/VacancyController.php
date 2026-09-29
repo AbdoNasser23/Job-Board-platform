@@ -116,7 +116,7 @@ class VacancyController extends Controller
 
         $vacancy->delete();
 
-        return to_route('vacancies.index')->with('success','Job archived successfullly!');
+        return to_route('vacancies.archived')->with('success','Job archived successfullly!');
     }
     /**
      * forceDelete function

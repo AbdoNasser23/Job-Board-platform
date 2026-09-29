@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('location');
             $table->enum('type',['full-time','contract','remote','hybrid'])->default('full-time');
             $table->decimal('salary', 10, 2);
+            $table->boolean('archived_with_company')->default(false);
             $table->uuid('company_id');
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('restrict');
             $table->uuid('category_id');

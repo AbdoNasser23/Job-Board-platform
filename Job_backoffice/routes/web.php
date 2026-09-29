@@ -16,6 +16,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // application and archive
+    Route::get('/applications/archived',[applicationController::class,'archived'])->name('applications.archived');
+    Route::patch('/applications/{application}/restore',[applicationController::class,'restore'])->withTrashed()->name('applications.restore');
+    Route::delete('/applications/{application}/archived',[applicationController::class,'forceDelete'])->name('applications.forceDelete')->withTrashed();
     Route::resource('applications', ApplicationController::class);
 
     // category and archived

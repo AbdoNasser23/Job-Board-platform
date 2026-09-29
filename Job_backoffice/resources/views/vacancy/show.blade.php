@@ -32,14 +32,9 @@
                     <a href="{{ route('vacancies.edit', [$vacancy, 'redirectToList' => false]) }}"
                         class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition hover:text-blue-800">
 
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.8"
-                            stroke="currentColor"
-                            class="h-4 w-4">
-                            <path stroke-linecap="round"
-                                stroke-linejoin="round"
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                            stroke="currentColor" class="h-4 w-4">
+                            <path stroke-linecap="round" stroke-linejoin="round"
                                 d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 15.99a4.5 4.5 0 0 1-1.897 1.13L6 18l.88-2.685a4.5 4.5 0 0 1 1.13-1.897l8.852-8.931Z" />
                         </svg>
 
@@ -48,8 +43,7 @@
 
 
                     {{-- Archive --}}
-                    <form action="{{ route('vacancies.destroy', $vacancy) }}"
-                        method="POST"
+                    <form action="{{ route('vacancies.destroy', $vacancy) }}" method="POST"
                         onsubmit="return confirm('Are you sure you want to archive this vacancy?')">
 
                         @csrf
@@ -58,17 +52,11 @@
                         <button type="submit"
                             class="inline-flex items-center gap-2 text-sm font-medium text-amber-600 transition hover:text-amber-800">
 
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.8"
-                                stroke="currentColor"
-                                class="h-4 w-4">
-                                <path stroke-linecap="round"
-                                    stroke-linejoin="round"
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                                stroke="currentColor" class="h-4 w-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M19.5 14.25V6.375A1.875 1.875 0 0 0 17.625 4.5H6.375A1.875 1.875 0 0 0 4.5 6.375v11.25A1.875 1.875 0 0 0 6.375 19.5v.0" />
-                                <path stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M8.25 8.25h7.5M8.25 11.25h7.5M8.25 14.25h4.5" />
                             </svg>
 
@@ -223,11 +211,24 @@
                             <tbody>
 
                                 @forelse ($vacancy->jobApplication as $application)
-
                                     <tr class="border-b border-slate-100">
 
                                         <td class="px-4 py-3 text-sm text-slate-800">
-                                            {{ $application->status }}
+                                            @php
+                                                $status = strtolower($application->status);
+
+                                                $statusClasses = match ($status) {
+                                                    'approved' => 'bg-green-100 text-green-700',
+                                                    'rejected' => 'bg-red-100 text-red-700',
+                                                    'pending' => 'bg-amber-100 text-amber-700',
+                                                    default => 'bg-slate-100 text-slate-700',
+                                                };
+                                            @endphp
+
+                                            <span
+                                                class="mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold {{ $statusClasses }}">
+                                                {{ $application->status }}
+                                            </span>
                                         </td>
 
                                         <td class="px-4 py-3 text-sm text-slate-600">
@@ -240,7 +241,7 @@
 
                                         <td class="px-4 py-3">
 
-                                            <a href="#"
+                                            <a href="{{route('applications.show',[$application,'from'=>'vacancy','vacancy' => $vacancy->id])}}"
                                                 class="text-sm font-medium text-blue-600 transition hover:text-blue-800">
                                                 View
                                             </a>
@@ -253,13 +254,11 @@
 
                                     <tr>
 
-                                        <td colspan="4"
-                                            class="px-4 py-8 text-center text-sm text-slate-400">
+                                        <td colspan="4" class="px-4 py-8 text-center text-sm text-slate-400">
                                             No applications found.
                                         </td>
 
                                     </tr>
-
                                 @endforelse
 
                             </tbody>
@@ -275,16 +274,16 @@
 
             {{-- Back --}}
             <div class="border-t border-slate-200 px-6 py-4">
-                @if(request('from') === 'company' && request('company'))
-                <a href="{{ route('companies.show', request('company')) }}"
-                    class="text-sm font-medium text-slate-600 transition hover:text-slate-900">
-                    ← Back to Company
-                </a>
+                @if (request('from') === 'company' && request('company'))
+                    <a href="{{ route('companies.show', request('company')) }}"
+                        class="text-sm font-medium text-slate-600 transition hover:text-slate-900">
+                        ← Back to Company
+                    </a>
                 @else
                     <a href="{{ route('vacancies.index') }}"
-                    class="text-sm font-medium text-slate-600 transition hover:text-slate-900">
-                    ← Back to Vacancies
-                </a>
+                        class="text-sm font-medium text-slate-600 transition hover:text-slate-900">
+                        ← Back to Vacancies
+                    </a>
                 @endif
 
             </div>

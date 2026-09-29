@@ -27,7 +27,7 @@
 
                 <div class="flex items-center gap-5">
 
-                    <a href="{{ route('companies.edit',[ $company , 'redirectToList' => false]) }}"
+                    <a href="{{ route('companies.edit', [$company, 'redirectToList' => false]) }}"
                         class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition hover:text-blue-800">
 
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
@@ -45,7 +45,8 @@
                         @csrf
                         @method('DELETE')
 
-                        <button type="submit" class="inline-flex items-center gap-2 text-sm font-medium text-amber-600 transition hover:text-amber-800">
+                        <button type="submit"
+                            class="inline-flex items-center gap-2 text-sm font-medium text-amber-600 transition hover:text-amber-800">
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
                                 stroke="currentColor" class="h-4 w-4">
@@ -216,7 +217,7 @@
 
                                         <td class="px-4 py-3">
 
-                                            <a href="{{route('vacancies.show',[$job, "from" => "company" , "company" => $company->id])}}"
+                                            <a href="{{ route('vacancies.show', [$job, 'from' => 'company', 'company' => $company->id]) }}"
                                                 class="text-sm font-medium text-blue-600 transition hover:text-blue-800">
                                                 View
                                             </a>
@@ -282,7 +283,21 @@
                                     <tr class="border-b border-slate-100">
 
                                         <td class="px-4 py-3 text-sm text-slate-800">
-                                            {{ $application->status }}
+                                            @php
+                                                $status = strtolower($application->status);
+
+                                                $statusClasses = match ($status) {
+                                                    'approved' => 'bg-green-100 text-green-700',
+                                                    'rejected' => 'bg-red-100 text-red-700',
+                                                    'pending' => 'bg-amber-100 text-amber-700',
+                                                    default => 'bg-slate-100 text-slate-700',
+                                                };
+                                            @endphp
+
+                                            <span
+                                                class="mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold {{ $statusClasses }}">
+                                                {{ $application->status }}
+                                            </span>
                                         </td>
 
                                         <td class="px-4 py-3 text-sm text-slate-600">
@@ -295,7 +310,7 @@
 
                                         <td class="px-4 py-3">
 
-                                            <a href="#"
+                                            <a href="{{route('applications.show',[$application, 'from' => 'company', 'company' => $company->id])}}"
                                                 class="text-sm font-medium text-blue-600 transition hover:text-blue-800">
                                                 View
                                             </a>

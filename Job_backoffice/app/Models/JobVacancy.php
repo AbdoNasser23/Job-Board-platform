@@ -23,6 +23,7 @@ class JobVacancy extends Model
         'location',
         'type',
         'salary',
+        'archived_with_company',
         'company_id',
         'category_id',
     ];
@@ -31,12 +32,13 @@ class JobVacancy extends Model
     {
         return [
             'deleted_at' => 'datetime',
+            'archived_with_company' => 'boolean',
         ];
     }
 
     public function company()
     {
-        return $this->belongsTo(Company::class, 'company_id', 'id');
+        return $this->belongsTo(Company::class, 'company_id', 'id')->withTrashed();;
     }
     public function jobCategory()
     {
@@ -48,6 +50,6 @@ class JobVacancy extends Model
         return $this->hasMany(JobApplication::class, 'job_vacancy_id', 'id');
     }
 
-    
+
 
 }

@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\JobApplication;
 use App\Models\JobCategory;
 use App\Models\JobVacancy;
+use App\Policies\ApplicationPolicy;
 use App\Policies\CategoryPolicy;
 use App\Policies\VacancyPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -27,5 +29,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(JobCategory::class, CategoryPolicy::class);
         Gate::policy(JobVacancy::class, VacancyPolicy::class);
+        Gate::policy(JobApplication::class,ApplicationPolicy::class);
     }
 }
