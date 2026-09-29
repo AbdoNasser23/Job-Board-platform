@@ -12,7 +12,7 @@ class CompanyPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return in_array($user->role , ['admin','company_owner']);
     }
 
     /**
@@ -63,6 +63,10 @@ class CompanyPolicy
      */
     public function restore(User $user, Company $company): bool
     {
+        if($company->user?->trashed()){
+            return false;
+        }
+
         if($user->role === 'admin') {
             return true;
         }

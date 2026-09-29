@@ -12,7 +12,7 @@ class VacancyPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return in_array($user->role , ['admin','company_owner']);
     }
 
     /**
@@ -64,6 +64,10 @@ class VacancyPolicy
      */
     public function restore(User $user, JobVacancy $jobVacancy): bool
     {
+        if($jobVacancy->company?->user?->trashed()){
+            return false;
+        }
+
         if($user->role === 'admin'){
             return true;
         }

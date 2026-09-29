@@ -21,6 +21,7 @@ class Company extends Model
         'name',
         'address',
         'website',
+        'archived_with_user',
         'industry_id',
         'user_id',
     ];
@@ -33,7 +34,7 @@ class Company extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id')->withTrashed();
     }
 
     public function industry()

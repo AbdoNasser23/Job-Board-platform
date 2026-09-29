@@ -24,9 +24,20 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+
         $request->authenticate();
 
         $request->session()->regenerate();
+
+
+        if(Auth::user()->role ==='job_seeker'){
+            Auth::logout();
+
+            return back()->withErrors([
+                'email' => 'You are not allowed to access the backoffice.'
+            ]);
+        }
+
 
         return redirect()->intended(route('dashboard.index', absolute: false));
     }

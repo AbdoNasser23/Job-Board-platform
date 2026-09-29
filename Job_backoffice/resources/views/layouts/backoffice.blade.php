@@ -54,11 +54,12 @@
                         class="flex items-center gap-3 rounded-lg {{ request()->routeIs('applications.index') ? $click : $notClick }}">
                         Job Applications
                     </a>
-
+                    @if(Auth::user()->role === 'admin')
                     <a href="{{ route('users.index') }}"
                         class="flex items-center gap-3 rounded-lg {{ request()->routeIs('users.index') ? $click : $notClick }}">
                         Users
                     </a>
+                    @endif
 
                 </nav>
 

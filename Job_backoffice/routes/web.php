@@ -41,6 +41,8 @@ Route::middleware('auth')->group(function () {
 
 
     //user and archive
+    Route::get('/users/archived',[UserController::class,'archived'])->name('users.archived');
+    Route::patch('/users/{user}/restore',[UserController::class,'restore'])->withTrashed()->name('users.restore');
     Route::resource('users',UserController::class);
 });
 
