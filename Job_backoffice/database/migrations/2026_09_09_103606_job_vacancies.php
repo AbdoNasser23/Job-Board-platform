@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('location');
             $table->enum('type',['full-time','contract','remote','hybrid'])->default('full-time');
+            $table->integer('view_count')->default(0);
             $table->decimal('salary', 10, 2);
             $table->boolean('archived_with_company')->default(false);
             $table->uuid('company_id');

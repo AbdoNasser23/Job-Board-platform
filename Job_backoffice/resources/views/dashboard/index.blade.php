@@ -1,193 +1,223 @@
 @extends('layouts.backoffice')
 
-@section('title', 'Dashboard - Job Board')
+@section('title', 'Platform Analytics - Job Board')
 
-@section('page-title', 'Dashboard')
+@section('page-title', 'Platform Analytics')
 
 @section('content')
 
-    <div class="mb-8">
+    <div class="space-y-6">
 
-        <h2 class="text-2xl font-bold tracking-tight text-slate-900">
-            Welcome back, {{ auth()->user()->name ?? 'Admin' }}
-        </h2>
-
-        <p class="mt-1 text-sm text-slate-500">
-            Here's what's happening with your job board today.
-        </p>
-
-    </div>
-
-
-    <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-
-            <p class="text-sm font-medium text-slate-500">
-                Active Users
+        {{-- Header --}}
+        <div>
+            <p class="text-sm text-slate-500">
+                Monitor platform performance and application activity.
             </p>
-
-            <p class="mt-2 text-2xl font-bold text-slate-900">
-                1,248
-            </p>
-
-            <p class="mt-4 text-xs text-slate-400">
-                Last 30 days
-            </p>
-
         </div>
 
 
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        {{-- Statistics --}}
+        @php
+            if (Auth::user()->role === 'admin') {
+                $number = 3;
+            } else {
+                $number = 2;
+            }
+        @endphp
 
-            <p class="text-sm font-medium text-slate-500">
-                Active Jobs
-            </p>
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-{{ $number }}">
 
-            <p class="mt-2 text-2xl font-bold text-slate-900">
-                186
-            </p>
-
-            <p class="mt-4 text-xs text-slate-400">
-                Currently published
-            </p>
-
-        </div>
-
-
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-
-            <p class="text-sm font-medium text-slate-500">
-                Applications
-            </p>
-
-            <p class="mt-2 text-2xl font-bold text-slate-900">
-                3,421
-            </p>
-
-            <p class="mt-4 text-xs text-slate-400">
-                Total received
-            </p>
-
-        </div>
-
-
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-
-            <p class="text-sm font-medium text-slate-500">
-                Companies
-            </p>
-
-            <p class="mt-2 text-2xl font-bold text-slate-900">
-                74
-            </p>
-
-            <p class="mt-4 text-xs text-slate-400">
-                Active companies
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div class="mt-6 grid gap-6 xl:grid-cols-3">
-
-        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm xl:col-span-2">
-
-            <h3 class="font-semibold text-slate-900">
-                Applications Overview
-            </h3>
-
-            <p class="mt-1 text-sm text-slate-500">
-                Application activity over the last 30 days.
-            </p>
-
-            <div class="mt-6 flex h-64 items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50">
-
-                <div class="text-center">
+            {{-- Active Users --}}
+            @if (Auth::user()->role === 'admin')
+                <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
 
                     <p class="text-sm font-medium text-slate-500">
-                        Chart will appear here
+                        Active Users (Last 30 Days)
                     </p>
 
-                    <p class="mt-1 text-xs text-slate-400">
-                        Analytics integration coming later
+                    <p class="mt-2 text-3xl font-semibold text-slate-900">
+                        {{ $dashboardAnalytics['activeUsers'] }}
                     </p>
 
                 </div>
+            @endif
+
+
+            {{-- Active Job Vacancies --}}
+            <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <p class="text-sm font-medium text-slate-500">
+                    Active Job Vacancies
+                </p>
+
+                <p class="mt-2 text-3xl font-semibold text-slate-900">
+                    {{ $dashboardAnalytics['totalJobs'] }}
+                </p>
+
+            </div>
+
+
+            {{-- Applications --}}
+            <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <p class="text-sm font-medium text-slate-500">
+                    Applications Received
+                </p>
+
+                <p class="mt-2 text-3xl font-semibold text-slate-900">
+                    {{ $dashboardAnalytics['totalApplications'] }}
+                </p>
 
             </div>
 
         </div>
 
 
-        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        
 
-            <h3 class="font-semibold text-slate-900">
-                Most Applied Jobs
-            </h3>
 
-            <p class="mt-1 text-sm text-slate-500">
-                Popular vacancies
-            </p>
+        {{-- Top 5 Analytics --}}
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
 
-            <div class="mt-5 space-y-4">
+            {{-- Most Applied Jobs --}}
+            <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
 
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-slate-800">
-                            Backend Laravel Developer
-                        </p>
+                <div class="border-b border-slate-200 px-5 py-4">
 
-                        <p class="mt-1 text-xs text-slate-400">
-                            Tech Company
-                        </p>
-                    </div>
+                    <h2 class="text-base font-semibold text-slate-900">
+                        Most Applied Jobs
+                    </h2>
 
-                    <span class="text-sm font-semibold text-slate-700">
-                        124
-                    </span>
+                    <p class="mt-1 text-sm text-slate-500">
+                        Top 5 active jobs by number of applications.
+                    </p>
+
                 </div>
 
+                <div class="overflow-x-auto">
 
-                <div class="border-t border-slate-100"></div>
+                    <table class="w-full text-left text-sm">
 
+                        <thead class="border-b border-slate-200 bg-slate-50">
 
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-slate-800">
-                            Flutter Developer
-                        </p>
+                            <tr>
 
-                        <p class="mt-1 text-xs text-slate-400">
-                            Digital Agency
-                        </p>
-                    </div>
+                                <th class="px-5 py-3 font-medium text-slate-600">
+                                    Job
+                                </th>
 
-                    <span class="text-sm font-semibold text-slate-700">
-                        98
-                    </span>
+                                <th class="px-5 py-3 font-medium text-slate-600">
+                                    Company
+                                </th>
+
+                                <th class="px-5 py-3 text-right font-medium text-slate-600">
+                                    Applications
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody class="divide-y divide-slate-100">
+
+                            @foreach ($dashboardAnalytics['mostAppliedJobs'] as $job)
+                                <tr>
+
+                                    <td class="px-5 py-4 font-medium text-slate-900">
+                                        {{ $job->title }}
+                                    </td>
+
+                                    <td class="px-5 py-4 text-slate-500">
+                                        {{ $job->company->name }}
+                                    </td>
+
+                                    <td class="px-5 py-4 text-right font-semibold text-slate-700">
+                                        {{ $job->view_count }}
+                                    </td>
+
+                                </tr>
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
                 </div>
 
+            </div>
 
-                <div class="border-t border-slate-100"></div>
 
+            {{-- Top Converting Jobs --}}
+            <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
 
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-slate-800">
-                            UI/UX Designer
-                        </p>
+                <div class="border-b border-slate-200 px-5 py-4">
 
-                        <p class="mt-1 text-xs text-slate-400">
-                            Creative Studio
-                        </p>
-                    </div>
+                    <h2 class="text-base font-semibold text-slate-900">
+                        Top Converting Job Vacancies
+                    </h2>
 
-                    <span class="text-sm font-semibold text-slate-700">
-                        76
-                    </span>
+                    <p class="mt-1 text-sm text-slate-500">
+                        Top 5 active vacancies by conversion rate.
+                    </p>
+
+                </div>
+
+                <div class="overflow-x-auto">
+
+                    <table class="w-full text-left text-sm">
+
+                        <thead class="border-b border-slate-200 bg-slate-50">
+
+                            <tr>
+
+                                <th class="px-5 py-3 font-medium text-slate-600">
+                                    Job
+                                </th>
+
+                                <th class="px-5 py-3 font-medium text-slate-600">
+                                    Views
+                                </th>
+
+                                <th class="px-5 py-3 font-medium text-slate-600">
+                                    Applications
+                                </th>
+
+                                <th class="px-5 py-3 text-right font-medium text-slate-600">
+                                    Conversion
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody class="divide-y divide-slate-100">
+
+                            @foreach ($dashboardAnalytics['conversionRate'] as $job)
+                                <tr>
+
+                                    <td class="px-5 py-4 font-medium text-slate-900">
+                                        {{ $job->title }}
+                                    </td>
+
+                                    <td class="px-5 py-4 text-slate-500">
+                                        {{ $job->view_count }}
+                                    </td>
+
+                                    <td class="px-5 py-4 text-slate-500">
+                                        {{ $job->total_count }}
+                                    </td>
+
+                                    <td class="px-5 py-4 text-right font-semibold text-green-600">
+                                        {{ $job->conversionRate }}%
+                                    </td>
+
+                                </tr>
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
                 </div>
 
             </div>

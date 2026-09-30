@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::middleware('auth')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::middleware(['auth', 'role:admin,company_owner'])->group(function () {
+    Route::get('/', DashboardController::class)->name('dashboard.index');
 
     // application and archive
     Route::get('/applications/archived',[applicationController::class,'archived'])->name('applications.archived');

@@ -1,15 +1,20 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Gate;
+use App\Services\AnalyticsService;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function __invoke(AnalyticsService $analytics)
     {
-        Gate::authorize('viewAny',User::class);
-        return view("dashboard.index");
+        $dashboardAnalytics = [
+            'activeUsers'       => $analytics->activeUsers(),
+            'totalJobs'         => $analytics->totalJobs(),
+            'totalApplications' => $analytics->totalApplications(),
+            'mostAppliedJobs'   => $analytics->appliedJobs(),
+            'conversionRate'    => $analytics->conversionRate()
+        ];
+
+        return view("dashboard.index", compact('dashboardAnalytics'));
     }
 }
