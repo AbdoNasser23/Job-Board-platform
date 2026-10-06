@@ -30,7 +30,10 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
 
+
         if(Auth::user()->role ==='job_seeker'){
+
+            
             Auth::logout();
 
             return back()->withErrors([

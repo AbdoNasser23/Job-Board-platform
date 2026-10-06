@@ -28,6 +28,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        if(Auth::user()->role === 'job_seeker'){
+
+            $user = Auth::user();
+            if($user instanceof \App\Models\User){
+                $user->last_login_at = now();
+                $user->save();
+            }
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

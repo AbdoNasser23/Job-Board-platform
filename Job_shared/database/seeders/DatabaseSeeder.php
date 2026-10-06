@@ -22,9 +22,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // include the job data from the JSON file
-        $jobData             = json_decode(file_get_contents(database_path('data/job_data.json')), true);
-        $jobApplicationsData = json_decode(file_get_contents(database_path('data/job_applications.json')), true);
-        $industries = json_decode(file_get_contents(database_path('data/industries.json')), true);
+
+        $SharedDataJsonPath = dirname(__DIR__);
+
+        $jobData             = json_decode(file_get_contents($SharedDataJsonPath . '/data/job_data.json'), true);
+        $jobApplicationsData = json_decode(file_get_contents($SharedDataJsonPath . '/data/job_applications.json'), true);
+        $industries = json_decode(file_get_contents($SharedDataJsonPath . '/data/industries.json'), true);
 
         // Create the admin user
         User::firstOrCreate([
