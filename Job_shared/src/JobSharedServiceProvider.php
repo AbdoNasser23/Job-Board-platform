@@ -3,8 +3,6 @@
 namespace App;
 
 use Illuminate\Support\ServiceProvider;
-use Database\Seeders\DatabaseSeeder;
-use Database\Seeders\UserSeeder;
 
 class JobSharedServiceProvider extends ServiceProvider
 {
@@ -16,8 +14,6 @@ class JobSharedServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->app->make(DatabaseSeeder::class)->run();
-        $this->app->make(UserSeeder::class)->run();
     }
 
     /**
