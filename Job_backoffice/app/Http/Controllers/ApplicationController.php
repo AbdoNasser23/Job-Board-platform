@@ -26,7 +26,7 @@ class ApplicationController extends Controller
         }
 
 
-        return view("Application.index", compact('applications'));
+        return view("application.index", compact('applications'));
     }
 
     /**

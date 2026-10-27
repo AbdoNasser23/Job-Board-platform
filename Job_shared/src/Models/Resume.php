@@ -31,7 +31,11 @@ class Resume extends Model
     protected function casts(): array
     {
         return [
-            'deleted_at' => 'datetime',
+            'deleted_at'      => 'datetime',
+            'contact_details' => 'array',
+            'skills'          => 'array',
+            'experience'      => 'array',
+            'education'       => 'array'
         ];
     }
 
