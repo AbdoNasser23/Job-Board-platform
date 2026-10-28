@@ -113,6 +113,7 @@
                                     </a>
 
                                     {{-- Edit --}}
+                                    @if(Auth::user()->role === 'company_owner')
                                     <a href="{{ route('applications.edit', [$application, 'redirectToList' => true]) }}"
                                         class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition hover:text-blue-800">
 
@@ -124,7 +125,7 @@
 
                                         Edit
                                     </a>
-
+                                    @endif
                                     {{-- Delete --}}
                                     <form action="{{ route('applications.destroy', $application) }}" method="POST"
                                         onsubmit="return confirm('Are you sure you want to delete this application?')">

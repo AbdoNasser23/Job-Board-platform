@@ -32,10 +32,6 @@ class Resume extends Model
     {
         return [
             'deleted_at'      => 'datetime',
-            'contact_details' => 'array',
-            'skills'          => 'array',
-            'experience'      => 'array',
-            'education'       => 'array'
         ];
     }
 

@@ -49,7 +49,7 @@ class VacancyController extends Controller
             $this->uploadResume($file, $originalFileName, $fileName, $vacancy , $resumeAnalysis);
         } else {
             //select CV from CVs uploaded
-            $this->selectResume($existingFile, $vacancy);
+            $this->selectResume($existingFile, $vacancy ,$resumeAnalysis);
         }
 
 
@@ -77,16 +77,32 @@ class VacancyController extends Controller
         $resume = Resume::create([
             'file_name'       => $originalFileName,
             'file_uri'        => $uploadedFile['secure_url'],
-            'contact_details' => json_encode([
-                'name'  => Auth::user()->name,
-                'email' => Auth::user()->email,
-            ]),
+            'contact_details' =>
+                "Name: " .  Auth::user()->name . "\n" .
+                "Email: ". Auth::user()->email
+                ,
             'user_id'         => Auth::id(),
             'skills'          => '',
             'summary'         => '',
             'experience'      => '',
             'education'       => '',
         ]);
+
+
+        $this->storeResume($resume->id,$vacancy , $resumeAnalysis);
+    }
+
+    public function selectResume(mixed $file_id, JobVacancy $vacancy , ResumeAnalysisServices $resumeAnalysis)
+    {
+        $this->storeResume($file_id,$vacancy,$resumeAnalysis);
+    }
+
+
+
+    public function storeResume( mixed $file_id , JobVacancy $vacancy ,ResumeAnalysisServices $resumeAnalysis )
+    {
+        $resume = Resume::where('user_id' , Auth::id())->findorFail($file_id) ;
+
         $result = $resumeAnalysis->extractResumeInformation($resume->file_uri);
         $resume->update([
             'skills'          => $result['skills'] ?? '',
@@ -95,18 +111,6 @@ class VacancyController extends Controller
             'education'       => $result['education'] ??'',
         ]);
 
-        $this->storeResume($resume->id,$vacancy);
-    }
-
-    public function selectResume(mixed $file_id, JobVacancy $vacancy)
-    {
-        $this->storeResume($file_id,$vacancy);
-    }
-
-
-
-    public function storeResume( mixed $file_id , JobVacancy $vacancy )
-    {
         JobApplication::create([
             'status'                => 'pending',
             'ai_generated_score'    => 0,
@@ -115,6 +119,8 @@ class VacancyController extends Controller
             'resume_id'             => $file_id,
             'user_id'               => Auth::id(),
         ]);
+
+
     }
 
 

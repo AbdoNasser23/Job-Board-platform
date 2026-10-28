@@ -8,6 +8,6 @@ class ApplicationController extends Controller
 {
     public function index()
     {
-        view('application.index');
+        return view('application.index');
     }
 }

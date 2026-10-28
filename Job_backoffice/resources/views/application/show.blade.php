@@ -95,6 +95,7 @@
                         </div>
 
                         {{-- Edit --}}
+                        @if(Auth::user()->role === "company_owner")
                         <a href="{{ route('applications.edit', [$application, 'redirectToList' => false]) }}"
                             class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition hover:text-blue-800">
 
@@ -115,6 +116,7 @@
                     </div>
 
                 </div>
+                @endif
 
                 {{-- Vacancy --}}
                 <div class="border-b border-slate-200 px-6 py-5 md:border-r">
@@ -253,7 +255,7 @@
                         <p class="text-sm font-medium text-slate-500">
                             Contact Details
                         </p>
-
+                        
                         <p class="mt-1 whitespace-pre-line text-sm leading-6 text-slate-700">
                             {{ $application->resume->contact_details ?? 'N/A' }}
                         </p>

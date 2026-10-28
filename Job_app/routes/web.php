@@ -18,37 +18,13 @@ Route::middleware('auth')->group(function () {
     Route::get('vacancy/{vacancy}/apply',[VacancyController::class,'apply'])->name('vacancy.apply');
     Route::post('vacancy/{vacancy}/apply',[VacancyController::class,'processToApply'])->name('vacancy.processToApply');
     Route::get('application',[ApplicationController::class,'index'])->name('application.index');
-    Route::get('/testAI',[VacancyController::class,'testAi']);
 
 
 
 
-Route::get('/test-cloudinary', function () {
-    return view('test-cloudinary');
-});
 
-Route::post('/test-cloudinary', function (Request $request) {
-    $request->validate([
-        'cv_file' => 'required|file|mimes:pdf|max:5120',
-    ]);
 
-    $cloudinary = new Cloudinary(
-        env('CLOUDINARY_URL')
-    );
 
-    $uploadedFile = $cloudinary->uploadApi()->upload(
-        $request->file('cv_file')->getRealPath(),
-        [
-            'resource_type' => 'raw',
-            'folder' => 'jobboard/cvs',
-        ]
-    );
-
-    return response()->json([
-        'message' => 'CV uploaded successfully!',
-        'public_id' => $uploadedFile['public_id'],
-    ]);
-});
 });
 
 require __DIR__.'/auth.php';

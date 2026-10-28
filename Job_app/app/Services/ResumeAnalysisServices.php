@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Services;
 
+use App\Models\JobVacancy;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -20,21 +22,30 @@ class ResumeAnalysisServices
     private function groqAi(string $text): array
     {
         $prompt = "
-                Analyze the following resume and extract its information.
+    Analyze the following resume and extract its information.
 
-                Return the result as a valid JSON object with exactly these keys:
-                - skills
-                - summary
-                - experience
-                - education
+    Return a valid JSON object with exactly these keys:
+    - skills
+    - summary
+    - experience
+    - education
 
-                Use only information found in the resume.
-                Do not invent missing information.
-                If a field is not available, return an empty string or an empty array as appropriate.
+    IMPORTANT:
+    - Every value must be a plain string.
+    - Do not return arrays or nested objects.
+    - For skills, list the skills as a comma-separated string.
+    - For experience, write the job title, company, dates,
+        and responsibilities as readable text.
+    - For education, write the degree, institution, and dates
+        as readable text.
+    - For summary, return a normal paragraph.
+    - Use only information found in the resume.
+    - Do not invent missing information.
+    - If a field is unavailable, return an empty string.
 
-                Resume text:
-                {$text}
-                ";
+    Resume text:
+    {$text}
+";
         try {
 
             $response = Http::withToken(config('services.groq.key'))->timeout(60)
@@ -67,7 +78,6 @@ class ResumeAnalysisServices
             return $data;
         } catch (\Throwable $e) {
             throw new \RuntimeException("Error Processing Request", 1, $e);
-
         }
     }
 
@@ -87,12 +97,18 @@ class ResumeAnalysisServices
                 throw new \RuntimeException('Failed to write temporary PDF file.');
             }
 
-
             return Pdf::getText($tempPath);
         } finally {
             File::delete($tempPath);
         }
-
     }
+
+
+//     public function generateScoreAndFeedback($data, JobVacancy $vacancy): array {
+//     // Get resume information.
+//     // Get job requirements.
+//     // Send both to Groq.
+//     // Return score and feedback.
+// }
 
 }

@@ -39,9 +39,6 @@ class ApplicationPolicy
      */
     public function update(User $user, JobApplication $jobApplication): bool
     {
-        if ($user->role === 'admin') {
-            return true;
-        }
 
         return $user->id === $jobApplication->jobVacancy?->company?->user_id;
     }
