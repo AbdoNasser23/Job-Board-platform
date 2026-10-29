@@ -111,10 +111,13 @@ class VacancyController extends Controller
             'education'       => $result['education'] ??'',
         ]);
 
+        $evalution = $resumeAnalysis->generateScoreAndFeedback($resume , $vacancy);
+
+
         JobApplication::create([
             'status'                => 'pending',
-            'ai_generated_score'    => 0,
-            'ai_generated_feedback' => '',
+            'ai_generated_score'    => $evalution['ai_generated_score'],
+            'ai_generated_feedback' => $evalution['ai_generated_feedback'],
             'job_vacancy_id'        => $vacancy->id,
             'resume_id'             => $file_id,
             'user_id'               => Auth::id(),

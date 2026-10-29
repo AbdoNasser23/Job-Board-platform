@@ -25,6 +25,15 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+        if (Auth::user()->role !== 'job_seeker') {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return to_route('home')
+            ->with('error', 'Your account is not authorized to log in here.');
+    }
 
         $request->session()->regenerate();
 

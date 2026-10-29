@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\VacancyCreateRequest;
 use App\Http\Requests\VacancyUpdateRequest;
 use App\Models\Company;
+use App\Models\JobApplication;
 use App\Models\JobCategory;
 use App\Models\JobVacancy;
 use Illuminate\Support\Facades\Auth;
@@ -72,7 +73,12 @@ class VacancyController extends Controller
     public function show(JobVacancy $vacancy)
     {
         Gate::authorize('view', $vacancy);
-        return view('vacancy.show',compact('vacancy'));
+
+        $applications = JobApplication::where('job_vacancy_id' , $vacancy->id)
+        ->orderByDesc('ai_generated_score')
+        ->get();
+
+        return view('vacancy.show',compact('vacancy','applications'));
     }
 
     /**

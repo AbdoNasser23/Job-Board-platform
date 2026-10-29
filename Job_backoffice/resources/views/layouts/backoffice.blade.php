@@ -74,10 +74,7 @@
                         Job Categories
                     </a>
 
-                    {{-- <a href="#"
-                        class="flex items-center gap-3 rounded-lg {{request()->routeIs('#.index') ? $click : $notClick}}">
-                        Analytics
-                    </a> --}}
+                    
 
                 </nav>
 

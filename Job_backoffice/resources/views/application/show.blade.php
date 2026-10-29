@@ -95,28 +95,28 @@
                         </div>
 
                         {{-- Edit --}}
-                        @if(Auth::user()->role === "company_owner")
-                        <a href="{{ route('applications.edit', [$application, 'redirectToList' => false]) }}"
-                            class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition hover:text-blue-800">
+                        @if (Auth::user()->role === 'company_owner')
+                            <a href="{{ route('applications.edit', [$application, 'redirectToList' => false]) }}"
+                                class="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition hover:text-blue-800">
 
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
-                                stroke="currentColor" class="h-4 w-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.8" stroke="currentColor" class="h-4 w-4">
 
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L9.75 16.902 5 18.25l1.348-4.75L16.862 4.487Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L9.75 16.902 5 18.25l1.348-4.75L16.862 4.487Z" />
 
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 5.25 18.75 9" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 5.25 18.75 9" />
 
-                            </svg>
+                                </svg>
 
-                            Edit
+                                Edit
 
-                        </a>
-
+                            </a>
+                        @endif
                     </div>
 
                 </div>
-                @endif
+
 
                 {{-- Vacancy --}}
                 <div class="border-b border-slate-200 px-6 py-5 md:border-r">
@@ -255,7 +255,7 @@
                         <p class="text-sm font-medium text-slate-500">
                             Contact Details
                         </p>
-                        
+
                         <p class="mt-1 whitespace-pre-line text-sm leading-6 text-slate-700">
                             {{ $application->resume->contact_details ?? 'N/A' }}
                         </p>
@@ -336,25 +336,21 @@
 
             <div class="border-t border-slate-200 px-6 py-4">
 
-                @if(request('from') === 'company' && request('company'))
-
-                <a href="{{ route('companies.show', request('company')) }}"
-                    class="text-sm font-medium text-slate-600 transition hover:text-slate-900">
-                    ← Back to Company
-                </a>
+                @if (request('from') === 'company' && request('company'))
+                    <a href="{{ route('companies.show', request('company')) }}"
+                        class="text-sm font-medium text-slate-600 transition hover:text-slate-900">
+                        ← Back to Company
+                    </a>
                 @elseif(request('from') === 'vacancy' && request('vacancy'))
-
-                <a href="{{ route('vacancies.show', request('vacancy')) }}"
-                    class="text-sm font-medium text-slate-600 transition hover:text-slate-900">
-                    ← Back to Vacancy
-                </a>
-
+                    <a href="{{ route('vacancies.show', request('vacancy')) }}"
+                        class="text-sm font-medium text-slate-600 transition hover:text-slate-900">
+                        ← Back to Vacancy
+                    </a>
                 @else
-                <a href="{{ route('applications.index') }}"
-                    class="text-sm font-medium text-slate-600 transition hover:text-slate-900">
-                    ← Back to Job Applications
-                </a>
-
+                    <a href="{{ route('applications.index') }}"
+                        class="text-sm font-medium text-slate-600 transition hover:text-slate-900">
+                        ← Back to Job Applications
+                    </a>
                 @endif
 
             </div>

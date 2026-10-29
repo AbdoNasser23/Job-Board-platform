@@ -210,7 +210,7 @@
 
                             <tbody>
 
-                                @forelse ($vacancy->jobApplication as $application)
+                                @forelse ($applications as $application)
                                     <tr class="border-b border-slate-100">
 
                                         <td class="px-4 py-3 text-sm text-slate-800">

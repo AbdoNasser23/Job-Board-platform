@@ -4,15 +4,14 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use Cloudinary\Cloudinary;
+
 
 Route::get('/', function () {
     return view('home.index');
-});
+})->name('home');
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','role:job_seeker'])->group(function () {
     Route::get('dashboard',DashboardController::class)->name('dashboard');
     Route::get('vacancy/{vacancy}',[VacancyController::class,'show'])->name('vacancy.show');
     Route::get('vacancy/{vacancy}/apply',[VacancyController::class,'apply'])->name('vacancy.apply');
